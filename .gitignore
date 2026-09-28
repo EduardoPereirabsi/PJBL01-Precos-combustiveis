@@ -1,0 +1,22 @@
+# --- dados (nunca versionar dados brutos) ---
+data/raw/
+data/interim/
+*.zip
+
+# --- ferramentas de trabalho (nao fazem parte da entrega) ---
+CLAUDE.md
+.claude/
+.venv/
+venv/
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+
+# --- editores / SO ---
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
