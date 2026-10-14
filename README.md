@@ -1,4 +1,4 @@
-# PjBL RA1 — Preços de Combustíveis no Brasil
+# PjBL — Preços de Combustíveis no Brasil
 
 Projeto da disciplina de **Data Analytics** (PUCPR).
 
@@ -36,9 +36,12 @@ As perguntas 1 e 5 são **descritivas** (o que aconteceu) e as perguntas 2, 3 e 
 | Registros | 3.717.753 recebidos · 3.715.016 após a preparação |
 | Tipo de dado | Estruturado |
 
-## O que este RA entrega
+## O que este repositório entrega
 
-Esta etapa cobre a **ingestão, avaliação da qualidade, limpeza e preparação** dos dados. O resultado é a base `data/processed/precos_combustiveis.parquet`, que será usada no RA2.
+Todo o desenvolvimento está no notebook `PJBL_precos_combustiveis.ipynb`, organizado no template da disciplina:
+
+- **RA1 — Ingestão, limpeza e análise inicial:** download dos 129 arquivos da ANP, exploração, limpeza com decisões justificadas, validação e transformação dos dados. O resultado é a base `data/processed/precos_combustiveis.parquet`.
+- **RA2 — Streaming e janelas temporais:** simulação da chegada de novas coletas de preço da gasolina em Curitiba, processadas com Spark Structured Streaming e agregadas em janelas Tumbling de 1 hora (postos pesquisados, preço médio, menor e maior preço).
 
 Principais problemas encontrados e tratados (os detalhes e as justificativas estão no notebook):
 
@@ -49,13 +52,12 @@ Principais problemas encontrados e tratados (os detalhes e as justificativas est
 - a mesma distribuidora aparece com nomes diferentes ao longo do tempo (ex.: `VIBRA ENERGIA` e `VIBRA`);
 - a coluna `Valor de Compra` está vazia em todo o período.
 
-Análises, indicadores e gráficos sobre as perguntas acima ficam para as próximas etapas.
 
 ## Como executar
 
 O notebook baixa os dados direto do site da ANP, então não é preciso baixar nada manualmente.
 
-**No Google Colab:** abra o notebook pelo GitHub (`Arquivo → Abrir notebook → GitHub`, colando o link deste repositório) e execute todas as células.
+**No Google Colab:** abra o notebook pelo GitHub (`Arquivo → Abrir notebook → GitHub`, colando o link deste repositório) e execute todas as células. A seção do RA2 é independente: para demonstrar só o streaming, basta executar a partir da seção 8.
 
 **Localmente:**
 
@@ -63,15 +65,15 @@ O notebook baixa os dados direto do site da ANP, então não é preciso baixar n
 git clone https://github.com/EduardoPereirabsi/PJBL01-Precos-combustiveis.git
 cd PJBL01-Precos-combustiveis
 pip install -r requirements.txt
-jupyter lab PJBL_RA1_precos_combustiveis.ipynb
+jupyter lab PJBL_precos_combustiveis.ipynb
 ```
 
-Na primeira execução o download leva alguns minutos (cerca de 630 MB). Nas seguintes, os arquivos já baixados são reaproveitados.
+Na primeira execução o download leva alguns minutos (cerca de 630 MB). Nas seguintes, os arquivos já baixados são reaproveitados. O RA2 usa PySpark, que precisa de Java 17 ou superior (o Colab já tem).
 
 ## Estrutura
 
 ```
-PJBL_RA1_precos_combustiveis.ipynb     notebook com todas as etapas
+PJBL_precos_combustiveis.ipynb         notebook com o RA1 e o RA2
 data/raw/                              arquivos baixados da ANP (não vão para o GitHub)
 data/controle_ingestao.csv             lista dos arquivos baixados, URL de origem e número de linhas
 data/processed/                        base preparada
