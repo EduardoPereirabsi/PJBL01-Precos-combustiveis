@@ -1,112 +1,79 @@
-# PjBL — RA1: Ingestão e Preparação dos Dados
+# PjBL RA1 — Preços de Combustíveis no Brasil
 
-**Disciplina:** Data Analytics · PUCPR
-**Tema:** Variação do preço de combustíveis nos postos brasileiros
-**Fonte:** ANP — Levantamento de Preços de Combustíveis (Série Histórica)
+Projeto da disciplina de **Data Analytics** (PUCPR).
 
-> **Equipe:** _(preencher com os nomes dos integrantes)_
+**Equipe:** _a preencher_
 
----
+## Contexto
 
-## O problema
+O preço de um mesmo combustível muda bastante de um posto para outro, mesmo dentro da mesma cidade e no mesmo dia. Essa diferença depende de vários fatores: imposto estadual, custo de transporte, bandeira do posto e concorrência local.
 
-O mesmo combustível, no mesmo dia, custa valores diferentes dependendo de onde o
-consumidor abastece — inclusive entre postos da mesma cidade. Essa variação não é
-transparente e não está descrita de forma estruturada.
+A ANP acompanha esses preços pelo *Levantamento de Preços de Combustíveis*, uma pesquisa feita em postos de todo o país. Neste projeto usamos esses dados para estudar a variação de preço entre os postos brasileiros.
 
-**Pergunta central:** quais fatores estão associados à variação do preço dos
-combustíveis entre os postos brasileiros?
+## Problema e perguntas
 
-As perguntas completas estão em [`specs/001-problema.md`](specs/001-problema.md).
+**Pergunta central:** quais fatores estão associados à variação do preço dos combustíveis entre os postos brasileiros?
 
-## O que este repositório entrega
+Perguntas que pretendemos responder nas próximas etapas:
 
-Este é o **RA1**: a etapa de obtenção, ingestão, avaliação de qualidade, limpeza e
-preparação dos dados. A entrega é um **conjunto de dados confiável e documentado**,
-não uma análise. As respostas às perguntas acima são o RA2 e o RA3.
+1. Qual é a diferença de preço entre regiões e estados para o mesmo produto?
+2. Postos sem bandeira (bandeira branca) cobram preços diferentes dos postos com bandeira?
+3. Quanto o preço varia entre postos de uma mesma cidade?
+4. Em quais estados o etanol compensa mais que a gasolina (regra dos 70%)?
+5. Como os preços evoluíram de 2023 a 2026?
+
+As perguntas 1 e 5 são **descritivas** (o que aconteceu) e as perguntas 2, 3 e 4 são **diagnósticas** (o que está associado ao preço).
+
+## Fonte dos dados
+
+| | |
+|---|---|
+| Fonte | ANP — Levantamento de Preços de Combustíveis (Série Histórica) |
+| Link | https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/serie-historica-de-precos-de-combustiveis |
+| Formato | CSV, um arquivo por mês para cada grupo de produtos (129 arquivos) |
+| Produtos | Gasolina, gasolina aditivada, etanol, diesel, diesel S10, GNV e GLP |
+| Período | janeiro/2023 a agosto/2026 (43 meses; abril/2026 não foi publicado pela ANP) |
+| Registros | 3.717.753 recebidos · 3.715.016 após a preparação |
+| Tipo de dado | Estruturado |
+
+## O que este RA entrega
+
+Esta etapa cobre a **ingestão, avaliação da qualidade, limpeza e preparação** dos dados. O resultado é a base `data/processed/precos_combustiveis.parquet`, que será usada no RA2.
+
+Principais problemas encontrados e tratados (os detalhes e as justificativas estão no notebook):
+
+- 2.713 linhas totalmente vazias no fim de dois arquivos de janeiro/2023;
+- 16 linhas duplicadas e um posto com dois preços diferentes para o mesmo produto no mesmo dia;
+- preço e data guardados como texto, com vírgula decimal e data no formato `dd/mm/aaaa`;
+- a coluna de preço mistura três unidades de medida (litro, m³ e botijão de 13 kg);
+- a mesma distribuidora aparece com nomes diferentes ao longo do tempo (ex.: `VIBRA ENERGIA` e `VIBRA`);
+- a coluna `Valor de Compra` está vazia em todo o período.
+
+Análises, indicadores e gráficos sobre as perguntas acima ficam para as próximas etapas.
+
+## Como executar
+
+O notebook baixa os dados direto do site da ANP, então não é preciso baixar nada manualmente.
+
+**No Google Colab:** abra o notebook pelo GitHub (`Arquivo → Abrir notebook → GitHub`, colando o link deste repositório) e execute todas as células.
+
+**Localmente:**
+
+```bash
+git clone https://github.com/EduardoPereirabsi/PJBL01-Precos-combustiveis.git
+cd PJBL01-Precos-combustiveis
+pip install -r requirements.txt
+jupyter lab PJBL_RA1_precos_combustiveis.ipynb
+```
+
+Na primeira execução o download leva alguns minutos (cerca de 630 MB). Nas seguintes, os arquivos já baixados são reaproveitados.
 
 ## Estrutura
 
 ```
-specs/                        A especificação — fonte da verdade do projeto
-  000-constituicao.md           regras, escopo e rubrica
-  001-problema.md               problema e perguntas analíticas
-  002-fontes.md                 origem, formato, dicionário de dados e volume
-  003-achados-qualidade.md      o que a inspeção encontrou, com números
-  004-decisoes.md               problema | decisão | justificativa
-  005-contrato-dados.md         schema e regras de validação do dataset final
-
-plan/
-  arquitetura.md                desenho do pipeline
-  tasks.md                      backlog rastreado até a rubrica
-
-src/                          implementação
-  ingestao.py                   download reprodutível a partir da ANP
-  preparacao.py                 uma função por decisão de 004
-  validacao.py                  uma função por regra de 005
-
-notebooks/
-  ra1_preparacao.ipynb          o fluxo completo, de ponta a ponta
-
-data/
-  raw/                          como baixado — não versionado
-  interim/                      consolidado — não versionado
-  processed/                    dataset final validado
+PJBL_RA1_precos_combustiveis.ipynb     notebook com todas as etapas
+data/raw/                              arquivos baixados da ANP (não vão para o GitHub)
+data/controle_ingestao.csv             lista dos arquivos baixados, URL de origem e número de linhas
+data/processed/                        base preparada
+requirements.txt                       bibliotecas usadas
 ```
-
-## Como reproduzir
-
-Requer Python 3.11 ou superior.
-
-```bash
-git clone <url-do-repositorio>
-cd pjbl-precos-combustiveis
-python -m venv .venv
-```
-
-Ative o ambiente:
-
-```bash
-source .venv/Scripts/activate
-```
-
-Instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-Execute a ingestão (baixa os arquivos da ANP para `data/raw/`):
-
-```bash
-python -m src.ingestao --inicio 2023-01 --fim 2026-08
-```
-
-Depois abra `notebooks/ra1_preparacao.ipynb` e execute todas as células. O
-notebook termina imprimindo o resultado das 12 regras de validação — todas
-precisam passar.
-
-> O download é de aproximadamente 300 MB e fica em cache em `data/raw/`. Execuções
-> seguintes não rebaixam os arquivos.
-
-## Sobre os dados
-
-Os CSVs brutos **não são versionados** por decisão de projeto: a reprodutibilidade
-é garantida pelo código de ingestão e pelo manifesto (`data/raw/_manifesto.csv`),
-que registra URL, tamanho, número de linhas e hash de cada arquivo baixado.
-
-Detalhes da fonte, incluindo o dicionário das 16 colunas originais, estão em
-[`specs/002-fontes.md`](specs/002-fontes.md).
-
-## Método
-
-O projeto segue o ciclo **INSPECT → DECIDE → TRANSFORM → VALIDATE**.
-
-A consequência prática é que **nenhuma transformação existe no código sem uma
-justificativa escrita** em [`specs/004-decisoes.md`](specs/004-decisoes.md), e
-toda decisão é verificada automaticamente pelas regras de
-[`specs/005-contrato-dados.md`](specs/005-contrato-dados.md).
-
-Isso inclui as decisões de **não fazer**: a base não recebeu imputação de valores
-ausentes nem remoção de outliers, porque a inspeção mostrou que esses problemas
-não existem nela. A verificação está documentada mesmo sem achado.

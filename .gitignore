@@ -3,9 +3,7 @@ data/raw/
 data/interim/
 *.zip
 
-# --- ferramentas de trabalho (nao fazem parte da entrega) ---
-CLAUDE.md
-.claude/
+# --- ambiente virtual ---
 .venv/
 venv/
 
