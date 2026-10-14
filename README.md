@@ -2,7 +2,7 @@
 
 Projeto da disciplina de **Data Analytics** (PUCPR).
 
-**Equipe:** _a preencher_
+**Equipe:** Eduardo Pereira, Patrick de Oliveira, Roberto Zhou, Matheus Fraiz de Camargo Antonello
 
 ## Contexto
 
