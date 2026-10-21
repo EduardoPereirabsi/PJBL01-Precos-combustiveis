@@ -43,6 +43,8 @@ Todo o desenvolvimento está no notebook `PJBL_precos_combustiveis.ipynb`, organ
 - **RA1 — Ingestão, limpeza e análise inicial:** download dos 129 arquivos da ANP, exploração, limpeza com decisões justificadas, validação e transformação dos dados. O resultado é a base `data/processed/precos_combustiveis.parquet`.
 - **RA2 — Streaming e janelas temporais:** simulação da chegada de novas coletas de preço da gasolina em Curitiba, processadas com Spark Structured Streaming e agregadas em janelas Tumbling de 1 hora (postos pesquisados, preço médio, menor e maior preço).
 
+A documentação do RA1 no modelo da disciplina está em `docs/RA1_Precos_Combustiveis.pdf` (também em `.docx`).
+
 Principais problemas encontrados e tratados (os detalhes e as justificativas estão no notebook):
 
 - 2.713 linhas totalmente vazias no fim de dois arquivos de janeiro/2023;
@@ -77,5 +79,6 @@ PJBL_precos_combustiveis.ipynb         notebook com o RA1 e o RA2
 data/raw/                              arquivos baixados da ANP (não vão para o GitHub)
 data/controle_ingestao.csv             lista dos arquivos baixados, URL de origem e número de linhas
 data/processed/                        base preparada
+docs/                                  documentação do RA1 (PDF e Word)
 requirements.txt                       bibliotecas usadas
 ```
