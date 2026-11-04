@@ -4,5 +4,6 @@ pyarrow>=16.0
 requests>=2.32
 matplotlib>=3.8
 seaborn>=0.13
+scikit-learn>=1.4
 jupyterlab>=4.2
 pyspark==4.0.3
