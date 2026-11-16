@@ -14,7 +14,7 @@ A ANP acompanha esses preços pelo *Levantamento de Preços de Combustíveis*, u
 
 **Pergunta central:** quais fatores estão associados à variação do preço dos combustíveis entre os postos brasileiros?
 
-Perguntas que pretendemos responder nas próximas etapas:
+Perguntas de apoio (respondidas no RA3):
 
 1. Qual é a diferença de preço entre regiões e estados para o mesmo produto?
 2. Postos sem bandeira (bandeira branca) cobram preços diferentes dos postos com bandeira?
@@ -38,10 +38,24 @@ As perguntas 1 e 5 são **descritivas** (o que aconteceu) e as perguntas 2, 3 e 
 
 ## O que este repositório entrega
 
-Todo o desenvolvimento está no notebook `PJBL_precos_combustiveis.ipynb`, organizado no template da disciplina:
+O RA1 e o RA2 estão no notebook `PJBL_precos_combustiveis.ipynb`, organizado no template da disciplina. O RA3 está em um notebook próprio, `PJBL_RA3_analise.ipynb`.
 
 - **RA1 — Ingestão, limpeza e análise inicial:** download dos 129 arquivos da ANP, exploração, limpeza com decisões justificadas, validação e transformação dos dados. O resultado é a base `data/processed/precos_combustiveis.parquet`.
 - **RA2 — Streaming e janelas temporais:** simulação da chegada de novas coletas de preço da gasolina em Curitiba, processadas com Spark Structured Streaming e agregadas em janelas Tumbling de 1 hora (postos pesquisados, preço médio, menor e maior preço).
+- **RA3 — Análise, visualização e Machine Learning:** a partir da base do RA1,
+  1. estatística descritiva (média, mediana, desvio-padrão, amplitude, coeficiente de variação, quartis e faixas de preço);
+  2. quatro visualizações com interpretação (evolução mensal, preço por estado, bandeira por estado e mapa de calor do etanol);
+  3. análise da representatividade da amostra da ANP;
+  4. uma regressão linear (scikit-learn) que prevê o preço da gasolina comum por estado, bandeira e mês, treinada com 2023–2025 e avaliada em 2026 pelo MAE;
+  5. conclusões.
+
+Principais resultados do RA3:
+
+- em agosto/2026, a gasolina comum ia de R$ 6,28 (MG) a R$ 7,57 (RR), e o Norte é a região mais cara;
+- no mesmo dia e na mesma cidade, a diferença entre o posto mais caro e o mais barato é de R$ 0,34 por litro (mediana);
+- em 17 dos 27 estados o posto com bandeira cobra mais que o de bandeira branca;
+- a gasolina subiu 30% entre janeiro/2023 e agosto/2026;
+- o modelo erra em média R$ 0,28 por litro em 2026, contra R$ 0,41 de uma referência simples.
 
 A documentação do RA1 no modelo da disciplina está em `docs/RA1_Precos_Combustiveis.pdf` (também em `.docx`).
 
@@ -72,10 +86,20 @@ jupyter lab PJBL_precos_combustiveis.ipynb
 
 Na primeira execução o download leva alguns minutos (cerca de 630 MB). Nas seguintes, os arquivos já baixados são reaproveitados. O RA2 usa PySpark, que precisa de Java 17 ou superior (o Colab já tem).
 
+### RA3
+
+O notebook do RA3 não refaz o download: ele lê a base preparada no RA1 (`data/processed/precos_combustiveis.parquet`, 27 MB). No Colab, o arquivo é baixado automaticamente deste repositório, e o notebook inteiro roda em cerca de 2 minutos.
+
+- **No Google Colab:** abra https://colab.research.google.com/github/EduardoPereirabsi/PJBL01-Precos-combustiveis/blob/main/PJBL_RA3_analise.ipynb e use *Ambiente de execução → Executar tudo*.
+- **Localmente:** depois do `pip install -r requirements.txt`, rode `jupyter lab PJBL_RA3_analise.ipynb`.
+
+Para conferir se a execução deu certo: a preparação mostra `✓ Base carregada: 3,715,016 linhas × 10 colunas`, e a avaliação do modelo mostra MAE de 0,28 para a regressão linear.
+
 ## Estrutura
 
 ```
 PJBL_precos_combustiveis.ipynb         notebook com o RA1 e o RA2
+PJBL_RA3_analise.ipynb                 notebook com o RA3 (estatística, gráficos e Machine Learning)
 data/raw/                              arquivos baixados da ANP (não vão para o GitHub)
 data/controle_ingestao.csv             lista dos arquivos baixados, URL de origem e número de linhas
 data/processed/                        base preparada
